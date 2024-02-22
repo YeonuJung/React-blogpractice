@@ -97,7 +97,9 @@ function Modal(props) {
       <h4>{props.글제목[props.modalTitle]}</h4>
       <p>날짜</p>
       <p>상세내용</p>
+      <p>ddd</p>
     </div>
+    
   );
 }
 {/* <button onClick = {() => {
@@ -105,5 +107,5 @@ function Modal(props) {
         copyTitle[0] = "여자 코트 추천"
         props.제목변경(copyTitle)
       }}>글수정</button> */}
-      
+    
 export default App;
