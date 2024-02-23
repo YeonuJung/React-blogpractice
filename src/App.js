@@ -10,11 +10,17 @@ function App() {
     "파이썬 독학",
   ]);
   let [따봉, 따봉변경] = useState([0, 0, 0]);
-  let [modal, setModal] = useState('닫힘');
-  let [modalTitle, setModalTitle] = useState(0)
+  let [modal, setModal] = useState("닫힘");
+  let [modalTitle, setModalTitle] = useState(0);
+  let [입력값, 입력값변경] = useState('')
+
+  const clickTitle = (index) => {
+    modal == "닫힘" ? setModal("열림") : setModal("닫힘");
+    setModalTitle(index);
+  };
   return (
     <>
-       <div className="black-nav">
+      <div className="black-nav">
         <h4>Reactblog</h4>
       </div>
       {/*
@@ -66,28 +72,55 @@ function App() {
       {modal == "열림"? <Modal></Modal> : null } */}
       {/* 이 부분은 살짝 이해가 되는게 title이 결국 글제목[index] 이니깐 각 인덱스를 가진 글제목을 클릭할 경우 setModalTitle 변경함수로 
           각각의 인덱스를 바꿀 수 있다는 점을 이해할 수 있었음. 하지만 밑에 따봉 표시의 경우 따봉을 누른다고 해서 왜 따로 +1 되는 메커니즘인지 이해할 수 없었음.*/}
-      {글제목.map(function(title, index){
-        return( 
-        <div className="list">
-        <h4 onClick = {() => {
-          modal == "닫힘"? setModal("열림") : setModal("닫힘")
-          setModalTitle(index)
-        }}>{title}<span                         
-        onClick={() => {
-          let copyUp = [...따봉];
-          copyUp[index] = copyUp[index] + 1
-          따봉변경(copyUp)
-        }}
-      >
-        👍
-      </span>
-      {따봉[index]}</h4>
-        <p>2월 18일 발행</p>
-      </div>)
-})}
-      {modal == "열림"? <Modal 글제목 = {글제목} modalTitle = {modalTitle}></Modal> : null }
+      {글제목.map(function (title, index) {
+        return (
+          <div className="list">
+            <h4
+              onClick={() => {
+                clickTitle(index);
+              }}
+            >
+              {title}
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  let copyUp = [...따봉];
+                  copyUp[index] = copyUp[index] + 1;
+                  따봉변경(copyUp);
+                }}
+              >
+                👍
+              </span>
+              {따봉[index]}
+              <button onClick = {(e) => {
+                e.stopPropagation();
+                let copy글제목 = [...글제목]
+                copy글제목.splice(index, 1)
+                제목변경(copy글제목)
+              
+              }}>삭제</button>
+            </h4>
+            <p>2월 18일 발행</p>
+          </div>
+        );
+      })}
 
-      </>
+      <input onChange = {(e) => {입력값변경(e.target.value)
+      }} ></input>
+
+      <button onClick = {() => {
+        let copy글제목 = [...글제목]
+        copy글제목.unshift(입력값)
+        제목변경(copy글제목)
+        let copy따봉 = [...따봉]
+        copy따봉.unshift(0)
+        따봉변경(copy따봉)
+      }}>제출</button>
+
+      {modal == "열림" ? (
+        <Modal 글제목={글제목} modalTitle={modalTitle}></Modal>
+      ) : null}
+    </>
   );
 }
 
@@ -99,13 +132,14 @@ function Modal(props) {
       <p>상세내용</p>
       <p>ddd</p>
     </div>
-    
   );
 }
-{/* <button onClick = {() => {
+{
+  /* <button onClick = {() => {
         let copyTitle = [...props.글제목]
         copyTitle[0] = "여자 코트 추천"
         props.제목변경(copyTitle)
-      }}>글수정</button> */}
-    
+      }}>글수정</button> */
+}
+
 export default App;
